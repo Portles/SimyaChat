@@ -7,4 +7,8 @@ target 'Simyachat' do
 
   # Pods for Simyachat
 
+pod 'Firebase/Core'
+pod 'Firebase/Auth'
+pod 'Firebase/Database'
+
 end

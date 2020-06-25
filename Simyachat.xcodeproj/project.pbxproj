@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -19,9 +19,15 @@
 		CA5CFF3924A1F20200DB2CD9 /* VideoPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5CFF3824A1F20200DB2CD9 /* VideoPlayerViewController.swift */; };
 		CA5CFF3B24A1F23100DB2CD9 /* NewConvarsationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5CFF3A24A1F23100DB2CD9 /* NewConvarsationViewController.swift */; };
 		CA5CFF3D24A1F24E00DB2CD9 /* ProfileViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5CFF3C24A1F24E00DB2CD9 /* ProfileViewController.swift */; };
+		CA8971FE24A4DED800A3414D /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CA8971FD24A4DED800A3414D /* GoogleService-Info.plist */; };
+		CA89720024A4FA4800A3414D /* DatabaseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA8971FF24A4FA4800A3414D /* DatabaseManager.swift */; };
+		CAB7003D24A256DB00564B04 /* Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = CAB7003C24A256DB00564B04 /* Extensions.swift */; };
+		D46A0F764A1F636418739EFF /* Pods_Simyachat.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E85EB9A8B983E6712E895D1D /* Pods_Simyachat.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		9997B4BD16D3D763F93643FF /* Pods-Simyachat.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Simyachat.debug.xcconfig"; path = "Target Support Files/Pods-Simyachat/Pods-Simyachat.debug.xcconfig"; sourceTree = "<group>"; };
+		A3586DEB537DAD083DCF918F /* Pods-Simyachat.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Simyachat.release.xcconfig"; path = "Target Support Files/Pods-Simyachat/Pods-Simyachat.release.xcconfig"; sourceTree = "<group>"; };
 		CA5CFF1524A1EE8A00DB2CD9 /* Simyachat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Simyachat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CA5CFF1824A1EE8A00DB2CD9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CA5CFF1A24A1EE8A00DB2CD9 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -36,6 +42,10 @@
 		CA5CFF3824A1F20200DB2CD9 /* VideoPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerViewController.swift; sourceTree = "<group>"; };
 		CA5CFF3A24A1F23100DB2CD9 /* NewConvarsationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewConvarsationViewController.swift; sourceTree = "<group>"; };
 		CA5CFF3C24A1F24E00DB2CD9 /* ProfileViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProfileViewController.swift; sourceTree = "<group>"; };
+		CA8971FD24A4DED800A3414D /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		CA8971FF24A4FA4800A3414D /* DatabaseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DatabaseManager.swift; sourceTree = "<group>"; };
+		CAB7003C24A256DB00564B04 /* Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Extensions.swift; sourceTree = "<group>"; };
+		E85EB9A8B983E6712E895D1D /* Pods_Simyachat.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Simyachat.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -43,17 +53,37 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				D46A0F764A1F636418739EFF /* Pods_Simyachat.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2A43F8B9E5071730254591B4 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				9997B4BD16D3D763F93643FF /* Pods-Simyachat.debug.xcconfig */,
+				A3586DEB537DAD083DCF918F /* Pods-Simyachat.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		8C9172FD092F3BF70C348A5B /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				E85EB9A8B983E6712E895D1D /* Pods_Simyachat.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		CA5CFF0C24A1EE8A00DB2CD9 = {
 			isa = PBXGroup;
 			children = (
 				CA5CFF1724A1EE8A00DB2CD9 /* Simyachat */,
 				CA5CFF1624A1EE8A00DB2CD9 /* Products */,
+				2A43F8B9E5071730254591B4 /* Pods */,
+				8C9172FD092F3BF70C348A5B /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -68,6 +98,7 @@
 		CA5CFF1724A1EE8A00DB2CD9 /* Simyachat */ = {
 			isa = PBXGroup;
 			children = (
+				CA8971FD24A4DED800A3414D /* GoogleService-Info.plist */,
 				CA5CFF3024A1EFFF00DB2CD9 /* Resource */,
 				CA5CFF2F24A1EFD900DB2CD9 /* ViewModels */,
 				CA5CFF2E24A1EFD200DB2CD9 /* Models */,
@@ -82,8 +113,7 @@
 			isa = PBXGroup;
 			children = (
 				CA5CFF1C24A1EE8A00DB2CD9 /* ConversationViewController.swift */,
-				CA5CFF3224A1F18800DB2CD9 /* LoginViewController.swift */,
-				CA5CFF3424A1F1B600DB2CD9 /* RegisterViewController.swift */,
+				CAB7003924A23EFB00564B04 /* Login */,
 				CA5CFF3624A1F1EB00DB2CD9 /* PhotoViewViewController.swift */,
 				CA5CFF3824A1F20200DB2CD9 /* VideoPlayerViewController.swift */,
 				CA5CFF3A24A1F23100DB2CD9 /* NewConvarsationViewController.swift */,
@@ -120,6 +150,8 @@
 			children = (
 				CA5CFF1824A1EE8A00DB2CD9 /* AppDelegate.swift */,
 				CA5CFF1A24A1EE8A00DB2CD9 /* SceneDelegate.swift */,
+				CAB7003C24A256DB00564B04 /* Extensions.swift */,
+				CA8971FF24A4FA4800A3414D /* DatabaseManager.swift */,
 			);
 			path = Resource;
 			sourceTree = "<group>";
@@ -133,6 +165,15 @@
 			path = Storyboards;
 			sourceTree = "<group>";
 		};
+		CAB7003924A23EFB00564B04 /* Login */ = {
+			isa = PBXGroup;
+			children = (
+				CA5CFF3224A1F18800DB2CD9 /* LoginViewController.swift */,
+				CA5CFF3424A1F1B600DB2CD9 /* RegisterViewController.swift */,
+			);
+			path = Login;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -140,9 +181,11 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = CA5CFF2924A1EE8C00DB2CD9 /* Build configuration list for PBXNativeTarget "Simyachat" */;
 			buildPhases = (
+				4C8B817CA497EF68C81F7279 /* [CP] Check Pods Manifest.lock */,
 				CA5CFF1124A1EE8A00DB2CD9 /* Sources */,
 				CA5CFF1224A1EE8A00DB2CD9 /* Frameworks */,
 				CA5CFF1324A1EE8A00DB2CD9 /* Resources */,
+				229E2A6A9FBEFE5302620B6F /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (
 			);
@@ -192,12 +235,55 @@
 			buildActionMask = 2147483647;
 			files = (
 				CA5CFF2524A1EE8C00DB2CD9 /* LaunchScreen.storyboard in Resources */,
+				CA8971FE24A4DED800A3414D /* GoogleService-Info.plist in Resources */,
 				CA5CFF2224A1EE8C00DB2CD9 /* Assets.xcassets in Resources */,
 				CA5CFF2024A1EE8A00DB2CD9 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		229E2A6A9FBEFE5302620B6F /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Simyachat/Pods-Simyachat-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Simyachat/Pods-Simyachat-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Simyachat/Pods-Simyachat-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		4C8B817CA497EF68C81F7279 /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Simyachat-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		CA5CFF1124A1EE8A00DB2CD9 /* Sources */ = {
@@ -209,7 +295,9 @@
 				CA5CFF3524A1F1B600DB2CD9 /* RegisterViewController.swift in Sources */,
 				CA5CFF3924A1F20200DB2CD9 /* VideoPlayerViewController.swift in Sources */,
 				CA5CFF1D24A1EE8A00DB2CD9 /* ConversationViewController.swift in Sources */,
+				CAB7003D24A256DB00564B04 /* Extensions.swift in Sources */,
 				CA5CFF1924A1EE8A00DB2CD9 /* AppDelegate.swift in Sources */,
+				CA89720024A4FA4800A3414D /* DatabaseManager.swift in Sources */,
 				CA5CFF3D24A1F24E00DB2CD9 /* ProfileViewController.swift in Sources */,
 				CA5CFF3B24A1F23100DB2CD9 /* NewConvarsationViewController.swift in Sources */,
 				CA5CFF1B24A1EE8A00DB2CD9 /* SceneDelegate.swift in Sources */,
@@ -354,6 +442,7 @@
 		};
 		CA5CFF2A24A1EE8C00DB2CD9 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9997B4BD16D3D763F93643FF /* Pods-Simyachat.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -372,6 +461,7 @@
 		};
 		CA5CFF2B24A1EE8C00DB2CD9 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = A3586DEB537DAD083DCF918F /* Pods-Simyachat.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
