@@ -7,6 +7,7 @@
 //
 
 import UIKit
+import FBSDKLoginKit
 import FirebaseAuth
 
 class LoginViewController: UIViewController{
@@ -65,7 +66,12 @@ class LoginViewController: UIViewController{
         button.titleLabel?.font = .systemFont(ofSize: 20, weight: .bold)
         return button
     }()
-
+    private let loginButton: FBLoginButton = {
+        let button = FBLoginButton()
+        button.permissions = ["email,public_profile"]
+        return button
+    }()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         title = "Giriş yap"
@@ -79,11 +85,14 @@ class LoginViewController: UIViewController{
         emailField.delegate = self
         passField.delegate = self
         
+        loginButton.delegate = self
+        
         view.addSubview(scrollView)
         scrollView.addSubview(imageView)
         scrollView.addSubview(emailField)
         scrollView.addSubview(passField)
         scrollView.addSubview(logButton)
+        scrollView.addSubview(loginButton)
     }
     
     override func viewDidLayoutSubviews() {
@@ -94,6 +103,8 @@ class LoginViewController: UIViewController{
         emailField.frame = CGRect(x: 30,y: imageView.bottom+10,width: scrollView.width-60,height: 52)
         passField.frame = CGRect(x: 30,y: emailField.bottom+10,width: scrollView.width-60,height: 52)
         logButton.frame = CGRect(x: 30,y: passField.bottom+10,width: scrollView.width-60,height: 52)
+        loginButton.frame = CGRect(x: 30,y: logButton.bottom+10,width: scrollView.width-60,height: 52)
+        loginButton.frame.origin.y = logButton.bottom+60
 
     }
     
@@ -147,5 +158,55 @@ extension LoginViewController: UITextFieldDelegate {
         
         
         return true
+    }
+}
+
+extension LoginViewController: LoginButtonDelegate {
+    func loginButtonDidLogOut(_ loginButton: FBLoginButton) {
+        
+    }
+    
+    func loginButton(_ loginButton: FBLoginButton, didCompleteWith result: LoginManagerLoginResult?, error: Error?) {
+        guard let token = result?.token?.tokenString else {
+            print("Facebook ile giriş başarısız.")
+            return
+        }
+        
+        let faceRQ = FBSDKLoginKit.GraphRequest(graphPath: "me", parameters: ["fields" : "email, name"], tokenString: token, version: nil, httpMethod: .get)
+        
+        faceRQ.start(completionHandler: { _, result, error in
+            guard let result = result as? [String: Any],
+                error == nil else {
+                print("Facebook graph hatası.")
+                return
+            }
+            print("\(result)")
+            guard let userName = result["name"] as? String,
+                let email = result["email"] as? String else {
+                    print("Id şifre alınamadı.")
+                    return
+            }
+
+            DatabaseManager.shared.UserExist(with: email, completion: { exists in
+                if !exists {
+                    DatabaseManager.shared.InsertUser(with: SimyachatUser(userName: userName, email: email))
+                }
+            })
+            
+            let credential = FacebookAuthProvider.credential(withAccessToken: token)
+            FirebaseAuth.Auth.auth().signIn(with: credential, completion: { [weak self] authResult, error in
+                
+                guard let strongSelf = self else {
+                    return
+                }
+                
+                guard authResult != nil, error == nil else {
+                    print("Facebook girişi başarısız. Hesapta çift doğrulama aktif olmayabilir.")
+                    return
+                }
+                print("Giriş başarılı.")
+                strongSelf.navigationController?.dismiss(animated: true, completion: nil)
+            })
+        })
     }
 }

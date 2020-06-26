@@ -20,7 +20,11 @@ extension DatabaseManager {
     
     public func UserExist(with email: String,
                           completion: @escaping ((Bool)->Void)){
-        database.child(email).observeSingleEvent(of: .value, with: { snapshot in
+        
+        var safeEmail = email.replacingOccurrences(of: ".", with: "-")
+        safeEmail = safeEmail.replacingOccurrences(of: "@", with: "-")
+        
+        database.child(safeEmail).observeSingleEvent(of: .value, with: { snapshot in
             guard snapshot.value as? String != nil else {
                 completion(false)
                 return
@@ -30,7 +34,7 @@ extension DatabaseManager {
     }
     
     public func InsertUser(with user: SimyachatUser){
-        database.child(user.email).setValue([
+        database.child(user.safeEmail).setValue([
             "nick_name": user.userName
         ])
     }
@@ -39,5 +43,10 @@ extension DatabaseManager {
 struct SimyachatUser {
     let userName: String
     let email: String
-    let pass: String
+    
+    var safeEmail: String {
+        var safeEmail = email.replacingOccurrences(of: ".", with: "-")
+        safeEmail = safeEmail.replacingOccurrences(of: "@", with: "-")
+        return safeEmail
+    }
 }

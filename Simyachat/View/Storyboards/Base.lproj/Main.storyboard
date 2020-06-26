@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="16097" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="gxf-fK-Hjc">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="16087"/>
@@ -7,7 +7,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--Conversation View Controller-->
+        <!--Sohbetler-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController id="BYZ-38-t0r" customClass="ConversationViewController" customModule="Simyachat" customModuleProvider="target" sceneMemberID="viewController">
@@ -17,10 +17,96 @@
                         <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
                     </view>
+                    <navigationItem key="navigationItem" title="Sohbetler" id="ihC-iI-8Da"/>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="139" y="138"/>
+            <point key="canvasLocation" x="-407" y="1100"/>
+        </scene>
+        <!--Profil-->
+        <scene sceneID="brD-H4-TPZ">
+            <objects>
+                <viewController id="oIo-NX-PoW" customClass="ProfileViewController" customModule="Simyachat" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="0dQ-Q1-RwL">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="M2H-Hv-303">
+                                <rect key="frame" x="0.0" y="140" width="414" height="673"/>
+                                <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" systemColor="systemBackgroundColor" cocoaTouchSystemColor="whiteColor"/>
+                        <constraints>
+                            <constraint firstItem="qcx-Vn-IV0" firstAttribute="bottom" secondItem="M2H-Hv-303" secondAttribute="bottom" id="1yM-W0-oWQ"/>
+                            <constraint firstItem="M2H-Hv-303" firstAttribute="leading" secondItem="qcx-Vn-IV0" secondAttribute="leading" id="2OQ-uM-pj9"/>
+                            <constraint firstItem="qcx-Vn-IV0" firstAttribute="trailing" secondItem="M2H-Hv-303" secondAttribute="trailing" id="JMy-Rk-onH"/>
+                            <constraint firstItem="M2H-Hv-303" firstAttribute="top" secondItem="qcx-Vn-IV0" secondAttribute="top" id="VR1-vv-ezV"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="qcx-Vn-IV0"/>
+                    </view>
+                    <navigationItem key="navigationItem" title="Profil" id="ORd-YC-jC9"/>
+                    <connections>
+                        <outlet property="tableView" destination="M2H-Hv-303" id="lqV-6g-zNN"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Y6L-2o-jEx" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="938" y="1100"/>
+        </scene>
+        <!--Tab Bar Controller-->
+        <scene sceneID="9Ng-n6-AfV">
+            <objects>
+                <tabBarController id="gxf-fK-Hjc" sceneMemberID="viewController">
+                    <tabBar key="tabBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" id="Jzx-3Q-Hnl">
+                        <rect key="frame" x="0.0" y="0.0" width="414" height="49"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                    </tabBar>
+                    <connections>
+                        <segue destination="5tG-W9-uzm" kind="relationship" relationship="viewControllers" id="6Qe-Vj-PAy"/>
+                        <segue destination="fmK-HA-YnC" kind="relationship" relationship="viewControllers" id="srO-Yd-DiH"/>
+                    </connections>
+                </tabBarController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="hfZ-zo-fS4" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="219" y="-397"/>
+        </scene>
+        <!--Profil-->
+        <scene sceneID="yHU-XB-JbX">
+            <objects>
+                <navigationController id="fmK-HA-YnC" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Profil" id="Cif-JG-ld8"/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="pem-Oc-vVr">
+                        <rect key="frame" x="0.0" y="44" width="414" height="96"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <connections>
+                        <segue destination="oIo-NX-PoW" kind="relationship" relationship="rootViewController" id="Wcn-hP-0Va"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="4eq-eS-no3" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="939" y="392"/>
+        </scene>
+        <!--Sohbetler-->
+        <scene sceneID="mdn-hz-T1d">
+            <objects>
+                <navigationController automaticallyAdjustsScrollViewInsets="NO" id="5tG-W9-uzm" sceneMemberID="viewController">
+                    <tabBarItem key="tabBarItem" title="Sohbetler" id="QLF-G1-7Y5"/>
+                    <toolbarItems/>
+                    <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="Y0R-8J-zkP">
+                        <rect key="frame" x="0.0" y="44" width="414" height="96"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </navigationBar>
+                    <nil name="viewControllers"/>
+                    <connections>
+                        <segue destination="BYZ-38-t0r" kind="relationship" relationship="rootViewController" id="yL3-JF-VLy"/>
+                    </connections>
+                </navigationController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="Kp4-iG-jYO" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="-407" y="392"/>
         </scene>
     </scenes>
 </document>

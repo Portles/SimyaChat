@@ -154,7 +154,7 @@ class RegisterViewController: UIViewController {
                     print("Hesap oluşturulamadı.")
                     return
                     }
-                    DatabaseManager.shared.InsertUser(with: SimyachatUser(userName: userName, email: email, pass: pass))
+                    DatabaseManager.shared.InsertUser(with: SimyachatUser(userName: userName, email: email))
                     strongSelf.navigationController?.dismiss(animated: true, completion: nil)
                 })
             })
@@ -164,7 +164,6 @@ class RegisterViewController: UIViewController {
             let alert = UIAlertController(title: "OH", message: message, preferredStyle: .alert)
             
             alert.addAction(UIAlertAction(title: "Boşver", style: .cancel, handler: nil))
-            
             present(alert, animated: true)
         }
         
