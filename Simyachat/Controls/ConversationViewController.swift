@@ -10,7 +10,13 @@ import UIKit
 import FirebaseAuth
 
 class ConversationViewController: UIViewController {
-
+    
+    private let tableView: UITableView {
+        let table = UITableView()
+        table.register(UITableView, forCellReuseIdentifier: <#T##String#>)
+        return table
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .white
