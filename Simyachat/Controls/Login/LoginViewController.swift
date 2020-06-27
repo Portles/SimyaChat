@@ -9,6 +9,7 @@
 import UIKit
 import FBSDKLoginKit
 import FirebaseAuth
+import GoogleSignIn
 
 class LoginViewController: UIViewController{
     
@@ -72,13 +73,26 @@ class LoginViewController: UIViewController{
         return button
     }()
     
+    private let GGloginButton = GIDSignInButton()
+    
+    private var loginObserver: NSObjectProtocol?
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        
+        loginObserver = NotificationCenter.default.addObserver(forName: .didLogInNotification, object: nil, queue: .main, using: { [weak self] _ in
+            guard let strongSelf = self else {
+                return
+            }
+            strongSelf.navigationController?.dismiss(animated: true, completion: nil)
+        })
+        
+        GIDSignIn.sharedInstance()?.presentingViewController = self
+        
         title = "Giriş yap"
         view.backgroundColor = .white
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(title : "Kayıt ol", style:  .done, target: self, action: #selector(didTapReg))
-        // Do any additional setup after loading the view.
         
         logButton.addTarget(self, action: #selector(logButtontap), for: .touchDragInside)
         
@@ -93,6 +107,13 @@ class LoginViewController: UIViewController{
         scrollView.addSubview(passField)
         scrollView.addSubview(logButton)
         scrollView.addSubview(loginButton)
+        scrollView.addSubview(GGloginButton)
+    }
+    
+    deinit {
+        if let observer = loginObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
     }
     
     override func viewDidLayoutSubviews() {
@@ -105,6 +126,7 @@ class LoginViewController: UIViewController{
         logButton.frame = CGRect(x: 30,y: passField.bottom+10,width: scrollView.width-60,height: 52)
         loginButton.frame = CGRect(x: 30,y: logButton.bottom+10,width: scrollView.width-60,height: 52)
         loginButton.frame.origin.y = logButton.bottom+60
+        GGloginButton.frame = CGRect(x: 30,y: loginButton.bottom+10,width: scrollView.width-60,height: 52)
 
     }
     

@@ -186,6 +186,7 @@
 				CA5CFF1224A1EE8A00DB2CD9 /* Frameworks */,
 				CA5CFF1324A1EE8A00DB2CD9 /* Resources */,
 				229E2A6A9FBEFE5302620B6F /* [CP] Embed Pods Frameworks */,
+				352E6C75BC3619473502B281 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -259,6 +260,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Simyachat/Pods-Simyachat-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		352E6C75BC3619473502B281 /* [CP] Copy Pods Resources */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Simyachat/Pods-Simyachat-resources-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Copy Pods Resources";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Simyachat/Pods-Simyachat-resources-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Simyachat/Pods-Simyachat-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		4C8B817CA497EF68C81F7279 /* [CP] Check Pods Manifest.lock */ = {
