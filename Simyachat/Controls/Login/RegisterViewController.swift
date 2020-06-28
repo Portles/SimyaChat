@@ -8,9 +8,12 @@
 
 import UIKit
 import FirebaseAuth
+import JGProgressHUD
 
 class RegisterViewController: UIViewController {
 
+    private let spinner = JGProgressHUD(style: .dark)
+    
     private let scrollView: UIScrollView = {
            let scrollView = UIScrollView()
             scrollView.clipsToBounds = true
@@ -140,10 +143,17 @@ class RegisterViewController: UIViewController {
                 return
             }
             
+            spinner.show(in: view)
+            
             DatabaseManager.shared.UserExist(with: email, completion: { [weak self]exist in
                 guard let strongSelf = self else {
                     return
                 }
+                
+                DispatchQueue.main.async {
+                    strongSelf.spinner.dismiss()
+                }
+                
                 guard !exist else{
                     strongSelf.alertLogError(message: "Bu email zaten kullanılmaktadır.")
                     return
@@ -154,7 +164,24 @@ class RegisterViewController: UIViewController {
                     print("Hesap oluşturulamadı.")
                     return
                     }
-                    DatabaseManager.shared.InsertUser(with: SimyachatUser(userName: userName, email: email))
+                    let charUser = SimyachatUser(userName: userName, email: email)
+                    DatabaseManager.shared.InsertUser(with: charUser, completion: { succes in
+                        if succes {
+                            guard let image = strongSelf.imageView.image, let data = image.pngData() else {
+                            return
+                            }
+                            let fileName = charUser.profilePictureFileName
+                            StorageManager.shared.uploadPP(with: data, fileName: fileName, completion: { result in
+                                switch result {
+                                case .success(let downloadURL):
+                                    UserDefaults.standard.set(downloadURL, forKey: "pp_url")
+                                    print(downloadURL)
+                                case .failure(let error):
+                                    print("Data yönetimi hatası. \(error)")
+                                }
+                            })
+                        }
+                    })
                     strongSelf.navigationController?.dismiss(animated: true, completion: nil)
                 })
             })

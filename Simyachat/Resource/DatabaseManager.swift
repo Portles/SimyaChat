@@ -33,10 +33,17 @@ extension DatabaseManager {
         })
     }
     
-    public func InsertUser(with user: SimyachatUser){
+    public func InsertUser(with user: SimyachatUser, completion: @escaping (Bool) -> Void){
         database.child(user.safeEmail).setValue([
             "nick_name": user.userName
-        ])
+            ], withCompletionBlock: { error, _ in
+                guard error == nil else {
+                    print("Database yazım hatası.")
+                    completion(false)
+                    return
+                }
+            completion(true)
+        })
     }
 }
 
@@ -48,5 +55,8 @@ struct SimyachatUser {
         var safeEmail = email.replacingOccurrences(of: ".", with: "-")
         safeEmail = safeEmail.replacingOccurrences(of: "@", with: "-")
         return safeEmail
+    }
+    var profilePictureFileName: String {
+        return "\(safeEmail)_PP.png"
     }
 }

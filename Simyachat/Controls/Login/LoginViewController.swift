@@ -10,8 +10,11 @@ import UIKit
 import FBSDKLoginKit
 import FirebaseAuth
 import GoogleSignIn
+import JGProgressHUD
 
 class LoginViewController: UIViewController{
+    
+    private let spinner = JGProgressHUD(style: .dark)
     
     private let scrollView: UIScrollView = {
        let scrollView = UIScrollView()
@@ -140,10 +143,18 @@ class LoginViewController: UIViewController{
             alertLogError()
             return
         }
+        
+        spinner.show(in: view)
+        
         FirebaseAuth.Auth.auth().signIn(withEmail: email, password: pass, completion: {[weak self]authResult, error in
             guard let strongSelf = self else{
                 return
             }
+            
+            DispatchQueue.main.async {
+                strongSelf.spinner.dismiss()
+            }
+            
             guard let result = authResult, error == nil else {
                 print("Hatalı giriş: \(email)")
                 return
@@ -194,7 +205,7 @@ extension LoginViewController: LoginButtonDelegate {
             return
         }
         
-        let faceRQ = FBSDKLoginKit.GraphRequest(graphPath: "me", parameters: ["fields" : "email, name"], tokenString: token, version: nil, httpMethod: .get)
+        let faceRQ = FBSDKLoginKit.GraphRequest(graphPath: "me", parameters: ["fields" : "email, name, picture.type(large)"], tokenString: token, version: nil, httpMethod: .get)
         
         faceRQ.start(completionHandler: { _, result, error in
             guard let result = result as? [String: Any],
@@ -204,14 +215,45 @@ extension LoginViewController: LoginButtonDelegate {
             }
             print("\(result)")
             guard let userName = result["name"] as? String,
-                let email = result["email"] as? String else {
+                let email = result["email"] as? String,
+                let picture = result["picture"] as? [String: Any],
+                let data = picture["data"] as? [String: Any],
+                let pictureURL = data["url"] as? String else {
                     print("Id şifre alınamadı.")
                     return
             }
 
             DatabaseManager.shared.UserExist(with: email, completion: { exists in
                 if !exists {
-                    DatabaseManager.shared.InsertUser(with: SimyachatUser(userName: userName, email: email))
+                    let chatUser = SimyachatUser(userName: userName, email: email)
+                    DatabaseManager.shared.InsertUser(with: chatUser, completion: { succes in
+                        if succes {
+                            
+                            guard let url = URL(string: pictureURL) else {
+                                return
+                            }
+                            
+                            print("Facebooktan fotoğraf indiriliyor")
+                            
+                            URLSession.shared.dataTask(with: url, completionHandler: { data, _, _ in
+                                guard let data = data else {
+                                    print("Facebooktan data alınamadı.")
+                                    return
+                                }
+                                print("İndirilen fotoğraf upload ediliyor.")
+                                let fileName = chatUser.profilePictureFileName
+                                StorageManager.shared.uploadPP(with: data, fileName: fileName, completion: { result in
+                                    switch result {
+                                    case .success(let downloadURL):
+                                        UserDefaults.standard.set(downloadURL, forKey: "pp_url")
+                                        print(downloadURL)
+                                    case .failure(let error):
+                                        print("Data yönetimi hatası. \(error)")
+                                    }
+                                })
+                            }).resume()
+                        }
+                    })
                 }
             })
             

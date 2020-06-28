@@ -74,7 +74,33 @@ class AppDelegate: UIResponder, UIApplicationDelegate, GIDSignInDelegate {
         
         DatabaseManager.shared.UserExist(with: email, completion: { exist in
             if !exist {
-                DatabaseManager.shared.InsertUser(with: SimyachatUser(userName: fullName, email: email))
+                let charUser = SimyachatUser(userName: fullName, email: email)
+                DatabaseManager.shared.InsertUser(with: charUser, completion: { succes in
+                    if succes {
+                        
+                        if user.profile.hasImage {
+                            guard let url = user.profile.imageURL(withDimension: 200) else {
+                                return
+                            }
+                            
+                            URLSession.shared.dataTask(with: url, completionHandler: { data, _, _ in
+                                guard let data = data else {
+                                    return
+                                }
+                                let fileName = charUser.profilePictureFileName
+                                StorageManager.shared.uploadPP(with: data, fileName: fileName, completion: { result in
+                                    switch result {
+                                    case .success(let downloadURL):
+                                        UserDefaults.standard.set(downloadURL, forKey: "pp_url")
+                                        print(downloadURL)
+                                    case .failure(let error):
+                                        print("Data yönetimi hatası. \(error)")
+                                    }
+                                })
+                            }).resume()
+                        }
+                    }
+                })
             }
         })
         
