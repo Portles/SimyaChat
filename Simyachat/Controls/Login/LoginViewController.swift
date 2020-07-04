@@ -160,6 +160,9 @@ class LoginViewController: UIViewController{
                 return
             }
             let user = result.user
+            
+            UserDefaults.standard.set(email, forKey: "email")
+            
             print("Giriş başarılı. \(user)")
             strongSelf.navigationController?.dismiss(animated: true, completion: nil)
         })
@@ -222,6 +225,8 @@ extension LoginViewController: LoginButtonDelegate {
                     print("Id şifre alınamadı.")
                     return
             }
+            
+            UserDefaults.standard.set(email, forKey: "email")
 
             DatabaseManager.shared.UserExist(with: email, completion: { exists in
                 if !exists {

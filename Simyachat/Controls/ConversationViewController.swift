@@ -33,16 +33,31 @@ class ConversationViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         navigationItem.rightBarButtonItem = UIBarButtonItem.init(barButtonSystemItem: .compose, target: self, action: #selector(didTapComposeButton))
-        view.addSubview(tableView)
+        view.addSubview(noConversationLabel)
         setupTableView()
         fetchConversations()
     }
     
     @objc private func didTapComposeButton() {
         let vc = NewConvarsationViewController()
+        vc.completion = { [weak self] result in
+            print("\(result)")
+            self?.createConversation(result: result)
+        }
         let navVc = UINavigationController(rootViewController: vc)
         present(navVc, animated: true)
     }
+    
+    private func createConversation(result: [String: String]) {
+        guard let name = result["name"], let email = result["email"] else {
+            return
+        }
+        let vc = ChatViewController(with: email)
+            vc.isNewConversation = true
+            vc.title = name
+            vc.navigationItem.largeTitleDisplayMode = .never
+            navigationController?.pushViewController(vc, animated: true)
+        }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -85,7 +100,7 @@ extension ConversationViewController: UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
 
-        let vc = ChatViewController()
+        let vc = ChatViewController(with: "Alikimykimyakimyakimyakimyakimyakimyakimya@nizomail.com")
         vc.title = "Ali Simya"
         vc.navigationItem.largeTitleDisplayMode = .never
         navigationController?.pushViewController(vc, animated: true)

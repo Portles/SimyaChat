@@ -41,4 +41,15 @@ final class StorageManager {
         case failedUplod
         case failedToGetDownloadUrl
     }
+    public func downloadURL(for path: String, completion: @escaping (Result<URL, Error>) -> Void) {
+        let referance = storage.child(path)
+        
+        referance.downloadURL(completion: {url, error in
+            guard let url = url, error == nil else {
+                completion(.failure(StorageError.failedToGetDownloadUrl))
+                return
+            }
+            completion(.success(url))
+        })
+    }
 }
