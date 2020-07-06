@@ -59,6 +59,7 @@ class ChatViewController: MessagesViewController {
     }()
     
     public let otherUserMail: String
+    private let conversationId: String?
     public var isNewConversation = false
     
     private var messages = [Message]()
@@ -67,11 +68,13 @@ class ChatViewController: MessagesViewController {
         guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
             return nil
         }
+        let safeEmail = DatabaseManager.safeEmail(emailAdress: email)
         
-        return Sender(photoURL: "", senderId: email, displayName: "Ali Simsimya")
+        return Sender(photoURL: "", senderId: safeEmail, displayName: "Ben")
     }
     
-    init(with email: String) {
+    init(with email: String, id: String?) {
+        self.conversationId = id
         self.otherUserMail = email
         super.init(nibName: nil ,bundle: nil)
     }
@@ -87,11 +90,38 @@ class ChatViewController: MessagesViewController {
         messagesCollectionView.messagesLayoutDelegate = self
         messagesCollectionView.messagesDisplayDelegate = self
         messageInputBar.delegate = self
+        
+    }
+    
+    private func listenForMessages(id: String, shouldScrollToBottom: Bool) {
+        DatabaseManager.shared.getAllMessagesForConversation(with: id, completion: { [weak self]result in
+            switch result {
+            case .success(let message):
+                guard !message.isEmpty else {
+                    return
+                }
+                
+                self?.messages = message
+                
+                DispatchQueue.main.async {
+                    self?.messagesCollectionView.reloadDataAndKeepOffset()
+                    if shouldScrollToBottom {
+                        self?.messagesCollectionView.scrollToBottom()
+                    }
+                }
+                
+            case .failure(let error):
+                print("Mesajlar yüklenemedi. \(error)")
+            }
+        })
     }
     
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         messageInputBar.inputTextView.becomeFirstResponder()
+        if let convesationId = conversationId {
+            listenForMessages(id: convesationId, shouldScrollToBottom: true)
+        }
     }
     
 }
@@ -107,7 +137,8 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
         print("Gönderiliyor: \(text)")
         if isNewConversation {
             let meessage = Message(sender: selfSender, messageId: messageId, sentDate: Date(), kind: .text(text))
-            DatabaseManager.shared.createNewConversation(with: otherUserMail, firstMessage: meessage, completion: { success in
+            let safemeil = DatabaseManager.safeEmail(emailAdress: otherUserMail)
+            DatabaseManager.shared.createNewConversation(with: safemeil, name: self.title ?? "User", firstMessage: meessage, completion: { success in
                 if success {
                     print("Mesaj gönderildi.")
                 } else {
@@ -119,8 +150,7 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
         }
     }
     private func createMessageId() -> String? {
-        guard let currentUserEmail = UserDefaults.standard.value(forKey: "email") as? String
-            else {
+        guard let currentUserEmail = UserDefaults.standard.value(forKey: "email") as? String else {
                 return nil
         }
         
@@ -139,8 +169,7 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
         if let sender = selfSender {
             return sender
         }
-        fatalError("Gönderici void dönüyor.")
-        return Sender(photoURL: "", senderId: "31", displayName: "ali mimYa")
+        fatalError("Gönderici void dönüyor, emaili kontrol et.")
     }
     
     func messageForItem(at indexPath: IndexPath, in messagesCollectionView: MessagesCollectionView) -> MessageType {
