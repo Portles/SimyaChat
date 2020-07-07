@@ -109,7 +109,6 @@ class ChatViewController: MessagesViewController {
                         self?.messagesCollectionView.scrollToBottom()
                     }
                 }
-                
             case .failure(let error):
                 print("Mesajlar yüklenemedi. \(error)")
             }
@@ -135,23 +134,30 @@ extension ChatViewController: InputBarAccessoryViewDelegate {
         }
         
         print("Gönderiliyor: \(text)")
+        let meessage = Message(sender: selfSender, messageId: messageId, sentDate: Date(), kind: .text(text))
+        let seyfmeil = DatabaseManager.safeEmail(emailAdress: otherUserMail)
         if isNewConversation {
-            let meessage = Message(sender: selfSender, messageId: messageId, sentDate: Date(), kind: .text(text))
-            let safemeil = DatabaseManager.safeEmail(emailAdress: otherUserMail)
-            DatabaseManager.shared.createNewConversation(with: safemeil, name: self.title ?? "User", firstMessage: meessage, completion: { success in
+            DatabaseManager.shared.createNewConversation(with: seyfmeil, name: self.title ?? "User", firstMessage: meessage, completion: {      [weak self] success in
                 if success {
                     print("Mesaj gönderildi.")
+                    self?.isNewConversation = false
                 } else {
                     print("Mesaj gönderilemedi")
                 }
             })
         } else {
-            
+            DatabaseManager.shared.sendMessage(to: seyfmeil, message: meessage, completion: { success in
+                if success {
+                    print("Mesaj gönderildi.")
+                } else {
+                    print("Mesaj gönderilemedi.")
+                }
+            })
         }
     }
     private func createMessageId() -> String? {
         guard let currentUserEmail = UserDefaults.standard.value(forKey: "email") as? String else {
-                return nil
+            return nil
         }
         
         let safeCurrentEmail = DatabaseManager.safeEmail(emailAdress: currentUserEmail)

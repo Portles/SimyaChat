@@ -53,7 +53,7 @@ extension DatabaseManager {
     
     public func InsertUser(with user: SimyachatUser, completion: @escaping (Bool) -> Void){
         database.child(user.safeEmail).setValue([
-            "nick_name": user.userName
+            "name": user.userName
             ], withCompletionBlock: { error, _ in
                 guard error == nil else {
                     print("Database yazım hatası.")
@@ -110,7 +110,8 @@ extension DatabaseManager {
 
 extension DatabaseManager {
     public func createNewConversation(with otherUserMail: String, name: String, firstMessage: Message, completion: @escaping (Bool)->Void) {
-        guard let currentUserEmail = UserDefaults.standard.value(forKey: "email") as? String else {
+        guard let currentUserEmail = UserDefaults.standard.value(forKey: "email") as? String,
+            let currentUserName = UserDefaults.standard.value(forKey: "name") as? String else {
             return
         }
         let safeEmail = DatabaseManager.safeEmail(emailAdress: currentUserEmail)
@@ -164,7 +165,7 @@ extension DatabaseManager {
             let recipient_newConversationData: [String: Any] = [
                 "id": conversationId,
                 "other_user_mail": safeEmail,
-                "name": "self",
+                "name": currentUserName,
                 "latest_message": [
                     "date": dateString,
                     "message": message,

@@ -161,7 +161,21 @@ class LoginViewController: UIViewController{
             }
             let user = result.user
             
-            UserDefaults.standard.set(email, forKey: "email")
+            let safmeail = DatabaseManager.safeEmail(emailAdress: email)
+            DatabaseManager.shared.getDataFor(path: safmeail, comletion: { result in
+                switch result {
+                case .success(let data):
+                    guard let userData = data as? [String: Any],
+                        let name = userData["name"] as? String else {
+                        return
+                    }
+                    UserDefaults.standard.set("\(name)", forKey: "name")
+                case .failure(let error):
+                    print("Data okunamadı: \(error)")
+                }
+            })
+            
+            UserDefaults.standard.set(safmeail, forKey: "email")
             
             print("Giriş başarılı. \(user)")
             strongSelf.navigationController?.dismiss(animated: true, completion: nil)
@@ -227,6 +241,7 @@ extension LoginViewController: LoginButtonDelegate {
             }
             
             UserDefaults.standard.set(email, forKey: "email")
+            UserDefaults.standard.set(userName, forKey: "name")
 
             DatabaseManager.shared.UserExist(with: email, completion: { exists in
                 if !exists {
