@@ -8,6 +8,7 @@
 
 import Foundation
 import FirebaseDatabase
+import MessageKit
 
 final class DatabaseManager {
     
@@ -307,13 +308,30 @@ extension DatabaseManager {
 //                     let isRead = dictionary["is_read"] as? String,
                      let name = dictionary["name"] as? String,
                      let senderEmail = dictionary["sender_email"] as? String,
-//                     let type = dictionary["type"] as? String,
+                     let type = dictionary["type"] as? String,
                     let date = ChatViewController.dateFormatter.date(from: dateString) else {
                         return nil
                 }
+                
+                var kind: MessageKind?
+                if type == "photo" {
+                    guard let imgurl = URL(string: content),
+                    let placeHolder = UIImage(systemName: "plus") else {
+                        return nil
+                    }
+                    let media = Media(url: imgurl, image: nil, placeholderImage: placeHolder, size: CGSize(width: 300, height: 300))
+                    kind = .photo(media)
+                } else {
+                    kind = .text(content)
+                }
+                
+                guard let finalKind = kind else {
+                    return nil
+                }
+                
                 let sender = Sender(photoURL: "", senderId: senderEmail, displayName: name)
                 
-                return Message(sender: sender, messageId: id, sentDate: date, kind: .text(content))
+                return Message(sender: sender, messageId: id, sentDate: date, kind: finalKind)
             })
             completion(.success(messages))
         })
@@ -346,7 +364,10 @@ extension DatabaseManager {
                 message = messageText
             case .attributedText(_):
                 break
-            case .photo(_):
+            case .photo(let mediaItem):
+                if let targetUrl = mediaItem.url?.absoluteString {
+                message = targetUrl
+                }
                 break
             case .video(_):
                 break
