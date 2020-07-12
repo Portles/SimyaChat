@@ -10,6 +10,8 @@ import UIKit
 import MessageKit
 import InputBarAccessoryView
 import SDWebImage
+import AVKit
+import AVFoundation
 
 struct Message: MessageType {
     public var sender: SenderType
@@ -122,8 +124,8 @@ class ChatViewController: MessagesViewController {
         actionSheet.addAction(UIAlertAction(title: "Fotoğraf", style: .default, handler: { [weak self] _ in
             self?.presentPhotoInputActionSheet()
         }))
-        actionSheet.addAction(UIAlertAction(title: "Video", style: .default, handler: {  _ in
-            
+        actionSheet.addAction(UIAlertAction(title: "Video", style: .default, handler: { [weak self] _ in
+            self?.presentVideoInputActionSheet()
         }))
         actionSheet.addAction(UIAlertAction(title: "Ses", style: .default, handler: {  _ in
             
@@ -146,6 +148,31 @@ class ChatViewController: MessagesViewController {
             let img = UIImagePickerController()
             img.sourceType = .photoLibrary
             img.delegate = self
+            img.allowsEditing = true
+            self?.present(img, animated: true)
+        }))
+        actionSheet.addAction(UIAlertAction(title: "Vazgeç", style: .default, handler: nil ))
+        
+        present(actionSheet, animated: true)
+    }
+    
+    private func presentVideoInputActionSheet() {
+        let actionSheet = UIAlertController(title: "Video Gönder", message: "Gönderme türünü seçiniz", preferredStyle: .actionSheet)
+        actionSheet.addAction(UIAlertAction(title: "Kamera", style: .default, handler: { [weak self] _ in
+            let img = UIImagePickerController()
+            img.sourceType = .camera
+            img.delegate = self
+            img.mediaTypes = ["public.movie"]
+            img.videoQuality = .typeMedium
+            img.allowsEditing = true
+            self?.present(img, animated: true)
+        }))
+        actionSheet.addAction(UIAlertAction(title: "Videolarım", style: .default, handler: { [weak self] _ in
+            let img = UIImagePickerController()
+            img.sourceType = .photoLibrary
+            img.delegate = self
+            img.mediaTypes = ["public.movie"]
+            img.videoQuality = .typeMedium
             img.allowsEditing = true
             self?.present(img, animated: true)
         }))
@@ -192,45 +219,74 @@ extension ChatViewController: UIImagePickerControllerDelegate, UINavigationContr
     }
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         picker.dismiss(animated: true, completion: nil)
-        guard let image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage,
-            let imgData = image.pngData(),
-            let messageId = createMessageId(),
+        guard let messageId = createMessageId(),
             let conversationId = conversationId,
             let name = self.title,
             let selfSender = selfSender else {
-            return
+                return
         }
         
-        let fileName = "message_photo"+messageId.replacingOccurrences(of: " ", with: "-")+".png"
-        
-        StorageManager.shared.uploadMessagePhoto(with: imgData, fileName: fileName, completion: { [weak self]result in
-            guard let strongSelf = self else {
-                return
-            }
-            switch result {
-            case .success(let urlString):
-                print("Mesaj fotoğrafı upload edildi: \(urlString)")
-                
-                guard let url = URL(string: urlString),
-                    let placeholder = UIImage(systemName: "plus") else {
-                        return
+        if let image = info[.editedImage] as? UIImage, let imgData = image.pngData() {
+            let fileName = "message_photo"+messageId.replacingOccurrences(of: " ", with: "-")+".png"
+            
+            StorageManager.shared.uploadMessagePhoto(with: imgData, fileName: fileName, completion: { [weak self]result in
+                guard let strongSelf = self else {
+                    return
                 }
-                
-                let media = Media(url: url, image: nil, placeholderImage: placeholder, size: .zero)
-                let meessage = Message(sender: selfSender, messageId: messageId, sentDate: Date(), kind: .photo(media))
-                
-                DatabaseManager.shared.sendMessage(to: conversationId, name: name, otherUserEmail: strongSelf.otherUserMail, newMessage: meessage, completion: { succes in
-                    if succes {
-                        print("Foto mesaj gönderildi.")
-                    } else {
-                        print("Foto mesaj gönderilemedi.")
+                switch result {
+                case .success(let urlString):
+                    print("Mesaj fotoğrafı upload edildi: \(urlString)")
+                    
+                    guard let url = URL(string: urlString),
+                        let placeholder = UIImage(systemName: "plus") else {
+                            return
                     }
-                })
-            case .failure(let error):
-                print("Fotoğraf upload error: \(error)")
-            }
-        })
-        
+                    
+                    let media = Media(url: url, image: nil, placeholderImage: placeholder, size: .zero)
+                    let meessage = Message(sender: selfSender, messageId: messageId, sentDate: Date(), kind: .photo(media))
+                    
+                    DatabaseManager.shared.sendMessage(to: conversationId, name: name, otherUserEmail: strongSelf.otherUserMail, newMessage: meessage, completion: { succes in
+                        if succes {
+                            print("Foto mesaj gönderildi.")
+                        } else {
+                            print("Foto mesaj gönderilemedi.")
+                        }
+                    })
+                case .failure(let error):
+                    print("Fotoğraf upload error: \(error)")
+                }
+            })
+        } else if let videoUrl = info[.mediaURL] as? URL {
+            let fileName = "message_video"+messageId.replacingOccurrences(of: " ", with: "-")+".mov"
+            
+            StorageManager.shared.uploadMessageVideo(with: videoUrl, fileName: fileName, completion: { [weak self]result in
+                guard let strongSelf = self else {
+                    return
+                }
+                switch result {
+                case .success(let urlString):
+                    print("Mesaj videosu upload edildi: \(urlString)")
+                    
+                    guard let url = URL(string: urlString),
+                        let placeholder = UIImage(systemName: "plus") else {
+                            return
+                    }
+                    
+                    let media = Media(url: url, image: nil, placeholderImage: placeholder, size: .zero)
+                    let meessage = Message(sender: selfSender, messageId: messageId, sentDate: Date(), kind: .video(media))
+                    
+                    DatabaseManager.shared.sendMessage(to: conversationId, name: name, otherUserEmail: strongSelf.otherUserMail, newMessage: meessage, completion: { succes in
+                        if succes {
+                            print("Video mesaj gönderildi.")
+                        } else {
+                            print("Video mesaj gönderilemedi.")
+                        }
+                    })
+                case .failure(let error):
+                    print("Video upload error: \(error)")
+                }
+            })
+        }
     }
 }
 
@@ -329,6 +385,14 @@ extension ChatViewController: MessageCellDelegate {
             }
             let vc = PhotoViewViewController(with: imgUrl)
             self.navigationController?.pushViewController(vc, animated: true)
+            case .video(let media):
+            guard let videoUrl = media.url else {
+                return
+            }
+            
+            let vc = AVPlayerViewController()
+            vc.player = AVPlayer(url: videoUrl)
+            present(vc, animated: true)
         default:
             break
         }

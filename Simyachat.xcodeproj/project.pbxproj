@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CA28630924BBAF3C00B06000 /* NewConversationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA28630824BBAF3C00B06000 /* NewConversationCell.swift */; };
 		CA5CFF1924A1EE8A00DB2CD9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5CFF1824A1EE8A00DB2CD9 /* AppDelegate.swift */; };
 		CA5CFF1B24A1EE8A00DB2CD9 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5CFF1A24A1EE8A00DB2CD9 /* SceneDelegate.swift */; };
 		CA5CFF1D24A1EE8A00DB2CD9 /* ConversationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA5CFF1C24A1EE8A00DB2CD9 /* ConversationViewController.swift */; };
@@ -31,6 +32,7 @@
 /* Begin PBXFileReference section */
 		9997B4BD16D3D763F93643FF /* Pods-Simyachat.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Simyachat.debug.xcconfig"; path = "Target Support Files/Pods-Simyachat/Pods-Simyachat.debug.xcconfig"; sourceTree = "<group>"; };
 		A3586DEB537DAD083DCF918F /* Pods-Simyachat.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Simyachat.release.xcconfig"; path = "Target Support Files/Pods-Simyachat/Pods-Simyachat.release.xcconfig"; sourceTree = "<group>"; };
+		CA28630824BBAF3C00B06000 /* NewConversationCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NewConversationCell.swift; sourceTree = "<group>"; };
 		CA5CFF1524A1EE8A00DB2CD9 /* Simyachat.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Simyachat.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		CA5CFF1824A1EE8A00DB2CD9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		CA5CFF1A24A1EE8A00DB2CD9 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -135,6 +137,7 @@
 				CA5CFF3124A1F03F00DB2CD9 /* Storyboards */,
 				CA5CFF2124A1EE8C00DB2CD9 /* Assets.xcassets */,
 				CAB0D5A724B1B80B0092221F /* ConversationsTableViewCell.swift */,
+				CA28630824BBAF3C00B06000 /* NewConversationCell.swift */,
 			);
 			path = View;
 			sourceTree = "<group>";
@@ -331,6 +334,7 @@
 				CA89DD4024A7B2550014BF81 /* ChatViewController.swift in Sources */,
 				CA5CFF1B24A1EE8A00DB2CD9 /* SceneDelegate.swift in Sources */,
 				CA902AFC24A8BA0600DC5916 /* StorageManager.swift in Sources */,
+				CA28630924BBAF3C00B06000 /* NewConversationCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

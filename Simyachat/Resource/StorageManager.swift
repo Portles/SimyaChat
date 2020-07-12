@@ -39,13 +39,33 @@ final class StorageManager {
     }
     
     public func uploadMessagePhoto(with data: Data, fileName: String, completion: @escaping uploadPictureCompletion) {
-        storage.child("message_img/\(fileName)").putData(data, metadata: nil, completion: { metadata, error in
+        storage.child("message_img/\(fileName)").putData(data, metadata: nil, completion: { [weak self]metadata, error in
             guard error == nil else {
                 print("Fotoğraf Firebase'e upload edilemedi.")
                 completion(.failure(StorageError.failedUplod))
                 return
             }
-            self.storage.child("message_img/\(fileName)").downloadURL(completion: { url, error in
+            self?.storage.child("message_img/\(fileName)").downloadURL(completion: { url, error in
+                guard let url = url else {
+                    print("İndirme url'si bulunamadı.")
+                    completion(.failure(StorageError.failedToGetDownloadUrl))
+                    return
+                }
+                let urlString = url.absoluteString
+                print("İndirme URL'si: \(urlString)")
+                completion(.success(urlString))
+            })
+        })
+    }
+    
+    public func uploadMessageVideo(with fileUrl: URL, fileName: String, completion: @escaping uploadPictureCompletion) {
+        storage.child("message_vid/\(fileName)").putFile(from: fileUrl, metadata: nil, completion: { [weak self]metadata, error in
+            guard error == nil else {
+                print("Video Firebase'e upload edilemedi.")
+                completion(.failure(StorageError.failedUplod))
+                return
+            }
+            self?.storage.child("message_vid/\(fileName)").downloadURL(completion: { url, error in
                 guard let url = url else {
                     print("İndirme url'si bulunamadı.")
                     completion(.failure(StorageError.failedToGetDownloadUrl))

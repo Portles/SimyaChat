@@ -305,7 +305,7 @@ extension DatabaseManager {
                 guard let id = dictionary["id"] as? String,
                      let content = dictionary["content"] as? String,
                      let dateString = dictionary["date"] as? String,
-//                     let isRead = dictionary["is_read"] as? String,
+                     let isRead = dictionary["is_read"] as? Bool,
                      let name = dictionary["name"] as? String,
                      let senderEmail = dictionary["sender_email"] as? String,
                      let type = dictionary["type"] as? String,
@@ -321,6 +321,14 @@ extension DatabaseManager {
                     }
                     let media = Media(url: imgurl, image: nil, placeholderImage: placeHolder, size: CGSize(width: 300, height: 300))
                     kind = .photo(media)
+                }
+                else if type == "video" {
+                    guard let vidUrl = URL(string: content),
+                        let placeHolder = UIImage(systemName: "film") else {
+                        return nil
+                    }
+                    let media = Media(url: vidUrl, image: nil, placeholderImage: placeHolder, size: CGSize(width: 300, height: 300))
+                    kind = .video(media)
                 } else {
                     kind = .text(content)
                 }
@@ -369,7 +377,10 @@ extension DatabaseManager {
                 message = targetUrl
                 }
                 break
-            case .video(_):
+            case .video(let mediaItem):
+                if let targetUrl = mediaItem.url?.absoluteString {
+                message = targetUrl
+                }
                 break
             case .location(_):
                 break
