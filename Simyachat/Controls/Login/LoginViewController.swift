@@ -36,7 +36,7 @@ class LoginViewController: UIViewController{
         field.returnKeyType = .continue
         field.layer.cornerRadius = 12
         field.layer.borderWidth = 1
-        field.layer.borderColor = UIColor.lightGray.cgColor
+        field.layer.borderColor = UIColor.black.cgColor
         field.placeholder = "Email adress"
         field.leftView = UIView(frame: CGRect(x: 0,y: 0, width: 5,height:0))
         field.leftViewMode = .always
@@ -51,7 +51,7 @@ class LoginViewController: UIViewController{
         field.returnKeyType = .done
         field.layer.cornerRadius = 12
         field.layer.borderWidth = 1
-        field.layer.borderColor = UIColor.lightGray.cgColor
+        field.layer.borderColor = UIColor.black.cgColor
         field.placeholder = "Password"
         field.leftView = UIView(frame: CGRect(x: 0,y: 0, width: 5,height:0))
         field.leftViewMode = .always
@@ -97,7 +97,7 @@ class LoginViewController: UIViewController{
         
         navigationItem.rightBarButtonItem = UIBarButtonItem(title : "Kayıt ol", style:  .done, target: self, action: #selector(didTapReg))
         
-        logButton.addTarget(self, action: #selector(logButtontap), for: .touchDragInside)
+        logButton.addTarget(self, action: #selector(logButtontap), for: .touchUpInside)
         
         emailField.delegate = self
         passField.delegate = self

@@ -37,13 +37,15 @@ class ConversationViewController: UIViewController {
     }()
     
     private let noConversationLabel: UILabel = {
-       let label = UILabel()
+        let label = UILabel()
         label.text = "Mesajınız yok"
         label.textAlignment = .center
         label.textColor = .gray
         label.font = .systemFont(ofSize: 21, weight: .medium)
         return label
     }()
+    
+    private var loginObserver: NSObjectProtocol?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -53,12 +55,24 @@ class ConversationViewController: UIViewController {
         setupTableView()
         fetchConversations()
         startlisteningForConversation()
+        
+        loginObserver = NotificationCenter.default.addObserver(forName: .didLogInNotification, object: nil, queue: .main, using: { [weak self] _ in
+            guard let strongSelf = self else {
+                return
+            }
+            strongSelf.startlisteningForConversation()
+        })
     }
     
     private func startlisteningForConversation() {
         guard let email = UserDefaults.standard.value(forKey: "email") as? String else {
             return
         }
+        
+        if let observer = loginObserver {
+            NotificationCenter.default.removeObserver(observer)
+        }
+        
         print("Chat başladı...")
         let safeEmail = DatabaseManager.safeEmail(emailAdress: email)
         DatabaseManager.shared.getAllConversations(for: safeEmail, completion: { [weak self]result in
@@ -95,11 +109,11 @@ class ConversationViewController: UIViewController {
         let email = result.email
         
         let vc = ChatViewController(with: email, id: nil)
-            vc.isNewConversation = true
-            vc.title = name
-            vc.navigationItem.largeTitleDisplayMode = .never
-            navigationController?.pushViewController(vc, animated: true)
-        }
+        vc.isNewConversation = true
+        vc.title = name
+        vc.navigationItem.largeTitleDisplayMode = .never
+        navigationController?.pushViewController(vc, animated: true)
+    }
     
     override func viewDidLayoutSubviews() {
         super.viewDidLayoutSubviews()
@@ -142,7 +156,7 @@ extension ConversationViewController: UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let model = conversations[indexPath.row]
-
+        
         let vc = ChatViewController(with: model.otherUserEmail, id: model.id)
         vc.title = model.name
         vc.navigationItem.largeTitleDisplayMode = .never
@@ -150,6 +164,29 @@ extension ConversationViewController: UITableViewDelegate, UITableViewDataSource
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 120
+    }
+    
+    func tableView(_ tableView: UITableView, editingStyleForRowAt indexPath: IndexPath) -> UITableViewCell.EditingStyle {
+        return .delete
+    }
+    
+    func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+        if editingStyle == .delete {
+            
+            let conversationId = conversations[indexPath.row].id
+            
+            tableView.beginUpdates()
+            
+            DatabaseManager.shared.deleteConversation(conversationId: conversationId, completion: { [weak self]success in
+                
+                if success{
+                    self?.conversations.remove(at: indexPath.row)
+                    
+                    tableView.deleteRows(at: [indexPath], with: .left)
+                }
+            })
+            tableView.endUpdates()
+        }
     }
 }
 
