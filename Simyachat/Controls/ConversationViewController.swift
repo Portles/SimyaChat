@@ -98,7 +98,23 @@ class ConversationViewController: UIViewController {
         let vc = NewConvarsationViewController()
         vc.completion = { [weak self] result in
             print("\(result)")
-            self?.createConversation(result: result)
+            guard let strongSelf = self else {
+                return
+            }
+            
+            let currentConversations = strongSelf.conversations
+            
+            if let targetConversation = currentConversations.first(where: {
+                $0.otherUserEmail == DatabaseManager.safeEmail(emailAdress: result.email)
+            }) {
+                let vc = ChatViewController(with: targetConversation.otherUserEmail, id: targetConversation.id)
+                vc.isNewConversation = false
+                vc.title = targetConversation.name
+                vc.navigationItem.largeTitleDisplayMode = .never
+                strongSelf.navigationController?.pushViewController(vc, animated: true)
+            } else {
+                strongSelf.createConversation(result: result)
+            }
         }
         let navVc = UINavigationController(rootViewController: vc)
         present(navVc, animated: true)
@@ -106,13 +122,27 @@ class ConversationViewController: UIViewController {
     
     private func createConversation(result: SearchResult) {
         let name = result.name
-        let email = result.email
+        let email = DatabaseManager.safeEmail(emailAdress: result.email)
         
-        let vc = ChatViewController(with: email, id: nil)
-        vc.isNewConversation = true
-        vc.title = name
-        vc.navigationItem.largeTitleDisplayMode = .never
-        navigationController?.pushViewController(vc, animated: true)
+        DatabaseManager.shared.conversationExist(with: email, completion: { [weak self]result in
+            guard let strongSelf = self else {
+                return
+            }
+            switch result {
+            case .success(let conversationId):
+                let vc = ChatViewController(with: email, id: conversationId)
+                vc.isNewConversation = false
+                vc.title = name
+                vc.navigationItem.largeTitleDisplayMode = .never
+                strongSelf.navigationController?.pushViewController(vc, animated: true)
+            case .failure(_):
+                let vc = ChatViewController(with: email, id: nil)
+                vc.isNewConversation = true
+                vc.title = name
+                vc.navigationItem.largeTitleDisplayMode = .never
+                strongSelf.navigationController?.pushViewController(vc, animated: true)
+            }
+        })
     }
     
     override func viewDidLayoutSubviews() {
@@ -156,12 +186,16 @@ extension ConversationViewController: UITableViewDelegate, UITableViewDataSource
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
         let model = conversations[indexPath.row]
-        
+        openConversation(model)
+    }
+    
+    func openConversation(_ model: Conversation){
         let vc = ChatViewController(with: model.otherUserEmail, id: model.id)
         vc.title = model.name
         vc.navigationItem.largeTitleDisplayMode = .never
         navigationController?.pushViewController(vc, animated: true)
     }
+    
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         return 120
     }

@@ -76,7 +76,7 @@
         <scene sceneID="yHU-XB-JbX">
             <objects>
                 <navigationController id="fmK-HA-YnC" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Profil" id="Cif-JG-ld8"/>
+                    <tabBarItem key="tabBarItem" title="Profil" image="person.circle" catalog="system" id="Cif-JG-ld8"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="pem-Oc-vVr">
                         <rect key="frame" x="0.0" y="44" width="414" height="96"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -93,7 +93,7 @@
         <scene sceneID="mdn-hz-T1d">
             <objects>
                 <navigationController automaticallyAdjustsScrollViewInsets="NO" id="5tG-W9-uzm" sceneMemberID="viewController">
-                    <tabBarItem key="tabBarItem" title="Sohbetler" id="QLF-G1-7Y5"/>
+                    <tabBarItem key="tabBarItem" title="Sohbetler" image="message" catalog="system" id="QLF-G1-7Y5"/>
                     <toolbarItems/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="Y0R-8J-zkP">
                         <rect key="frame" x="0.0" y="44" width="414" height="96"/>
@@ -109,4 +109,8 @@
             <point key="canvasLocation" x="-407" y="392"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="message" catalog="system" width="128" height="113"/>
+        <image name="person.circle" catalog="system" width="128" height="121"/>
+    </resources>
 </document>
