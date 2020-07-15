@@ -12,6 +12,7 @@ import InputBarAccessoryView
 import SDWebImage
 import AVKit
 import AVFoundation
+import CoreLocation
 
 struct Message: MessageType {
     public var sender: SenderType
@@ -57,6 +58,13 @@ struct Media: MediaItem {
     var image: UIImage?
     
     var placeholderImage: UIImage
+    
+    var size: CGSize
+    
+}
+
+struct Location: LocationItem {
+    var location: CLLocation
     
     var size: CGSize
     
@@ -130,9 +138,48 @@ class ChatViewController: MessagesViewController {
         actionSheet.addAction(UIAlertAction(title: "Ses", style: .default, handler: {  _ in
             
         }))
+        actionSheet.addAction(UIAlertAction(title: "Konum", style: .default, handler: { [weak self] _ in
+            self?.presentLocationPicker()
+        }))
         actionSheet.addAction(UIAlertAction(title: "Vazgeç", style: .default, handler: nil ))
         
         present(actionSheet, animated: true)
+    }
+    
+    private func presentLocationPicker() {
+        let vc = LocationPickerViewController(cordinates: nil)
+        vc.title = "Konum Seçiniz"
+        vc.navigationItem.largeTitleDisplayMode = .never
+        vc.completion = { [weak self] selectedCordinates in
+            
+            guard let strongSelf = self else {
+                return
+            }
+            
+            guard let messageId = strongSelf.createMessageId(),
+                let conversationId = strongSelf.conversationId,
+                let name = strongSelf.title,
+                let selfSender = strongSelf.selfSender else {
+                    return
+            }
+            
+            let longitude: Double = selectedCordinates.longitude
+            let latitude: Double = selectedCordinates.latitude
+            
+            print("Enlem = \(longitude),Boylam = \(latitude)")
+            
+            let loc = Location(location: CLLocation(latitude: latitude, longitude: longitude), size: .zero)
+            let meessage = Message(sender: selfSender, messageId: messageId, sentDate: Date(), kind: .location(loc))
+            
+            DatabaseManager.shared.sendMessage(to: conversationId, name: name, otherUserEmail: strongSelf.otherUserMail, newMessage: meessage, completion: { succes in
+                if succes {
+                    print("Konum mesaj gönderildi.")
+                } else {
+                    print("Konum mesaj gönderilemedi.")
+                }
+            })
+        }
+        navigationController?.pushViewController(vc, animated: true)
     }
     
     private func presentPhotoInputActionSheet() {
@@ -372,6 +419,23 @@ extension ChatViewController: MessagesDataSource, MessagesLayoutDelegate, Messag
 }
 
 extension ChatViewController: MessageCellDelegate {
+    func didTapMessage(in cell: MessageCollectionViewCell) {
+        guard let indexPath = messagesCollectionView.indexPath(for: cell) else {
+            return
+        }
+        let message = messages[indexPath.section]
+        
+        switch message.kind {
+        case .location(let locaionData):
+            let cordinates = locaionData.location.coordinate
+            let vc = LocationPickerViewController(cordinates: cordinates)
+            vc.title = "Konum"
+            self.navigationController?.pushViewController(vc, animated: true)
+        default:
+            break
+        }
+    }
+    
     func didTapImage(in cell: MessageCollectionViewCell) {
         guard let indexPath = messagesCollectionView.indexPath(for: cell) else {
             return
@@ -385,7 +449,7 @@ extension ChatViewController: MessageCellDelegate {
             }
             let vc = PhotoViewViewController(with: imgUrl)
             self.navigationController?.pushViewController(vc, animated: true)
-            case .video(let media):
+        case .video(let media):
             guard let videoUrl = media.url else {
                 return
             }
