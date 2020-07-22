@@ -177,7 +177,7 @@ class LoginViewController: UIViewController{
                 }
             })
             
-            UserDefaults.standard.set(safmeail, forKey: "email")
+            UserDefaults.standard.set(email, forKey: "email")
             
             print("Giriş başarılı. \(user)")
             strongSelf.navigationController?.dismiss(animated: true, completion: nil)

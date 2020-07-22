@@ -164,6 +164,10 @@ class RegisterViewController: UIViewController {
                     print("Hesap oluşturulamadı.")
                     return
                     }
+                    
+                    UserDefaults.standard.set(email, forKey: "email")
+                    UserDefaults.standard.set(userName, forKey: "name")
+                    
                     let charUser = SimyachatUser(userName: userName, email: email)
                     DatabaseManager.shared.InsertUser(with: charUser, completion: { succes in
                         if succes {
