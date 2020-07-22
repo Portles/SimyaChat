@@ -13,7 +13,7 @@ import CoreLocation
 
 final class DatabaseManager {
     
-    static let shared = DatabaseManager()
+    public static let shared = DatabaseManager()
     
     private let database = Database.database().reference()
     
@@ -26,7 +26,7 @@ final class DatabaseManager {
 
 extension DatabaseManager {
     public func getDataFor(path: String, comletion: @escaping (Result<Any, Error>) -> Void) {
-        self.database.child("\(path)").observeSingleEvent(of: .value) { snapshot in
+        database.child("\(path)").observeSingleEvent(of: .value) { snapshot in
             guard let value = snapshot.value else {
                 comletion(.failure(DatabaseError.dataCekmeHatasi))
                 return
@@ -114,6 +114,13 @@ extension DatabaseManager {
     }
     public enum DatabaseError: Error {
         case dataCekmeHatasi
+        
+        public var localizedDescription: String{
+            switch self {
+            case .dataCekmeHatasi:
+                return "Başarısızlık"
+            }
+        }
     }
 }
 

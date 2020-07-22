@@ -13,19 +13,26 @@ final class StorageManager {
     
     static let shared = StorageManager()
     
+    private init() {}
+    
     private let storage = Storage.storage().reference()
     
     
     public typealias uploadPictureCompletion = (Result<String, Error>) -> Void
     
     public func uploadPP(with data: Data, fileName: String, completion: @escaping uploadPictureCompletion) {
-        storage.child("img/\(fileName)").putData(data, metadata: nil, completion: { metadata, error in
+        storage.child("img/\(fileName)").putData(data, metadata: nil, completion: { [weak self] metadata, error in
+            
+            guard let strongSelf = self else {
+                return
+            }
+            
             guard error == nil else {
                 print("Fotoğraf Firebase'e upload edilemedi.")
                 completion(.failure(StorageError.failedUplod))
                 return
             }
-            self.storage.child("img/\(fileName)").downloadURL(completion: { url, error in
+            strongSelf.storage.child("img/\(fileName)").downloadURL(completion: { url, error in
                 guard let url = url else {
                     print("İndirme url'si bulunamadı.")
                     completion(.failure(StorageError.failedToGetDownloadUrl))

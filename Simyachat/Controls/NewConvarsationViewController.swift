@@ -9,7 +9,7 @@
 import UIKit
 import JGProgressHUD
 
-class NewConvarsationViewController: UIViewController {
+final class NewConvarsationViewController: UIViewController {
     
     public var completion: ((SearchResult) -> (Void))?
     
@@ -99,7 +99,7 @@ extension NewConvarsationViewController: UISearchBarDelegate {
         results.removeAll()
         spinner.show(in: view)
         
-        self.searchUsers(query: text)
+        searchUsers(query: text)
     }
     func searchUsers(query: String) {
         if hasFetched {
@@ -126,7 +126,7 @@ extension NewConvarsationViewController: UISearchBarDelegate {
         
         self.spinner.dismiss()
         
-        let results: [SearchResult] = self.users.filter({
+        let results: [SearchResult] = users.filter({
             guard let email = $0["email"],
                 email != safeMaille else {
                     return false
@@ -150,17 +150,13 @@ extension NewConvarsationViewController: UISearchBarDelegate {
     }
     func updateUI() {
         if results.isEmpty {
-            self.noResultLabel.isHidden = false
-            self.tableView.isHidden = true
+            noResultLabel.isHidden = false
+            tableView.isHidden = true
         } else {
-            self.noResultLabel.isHidden = true
-            self.tableView.isHidden = false
-            self.tableView.reloadData()
+            noResultLabel.isHidden = true
+            tableView.isHidden = false
+            tableView.reloadData()
         }
     }
 }
 
-struct SearchResult {
-    let email: String
-    let name: String
-}
