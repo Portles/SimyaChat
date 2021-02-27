@@ -186,7 +186,7 @@ final class ChatViewController: MessagesViewController {
                 DispatchQueue.main.async {
                     self?.messagesCollectionView.reloadDataAndKeepOffset()
                     if shouldScrollToBottom {
-                        self?.messagesCollectionView.scrollToBottom()
+                        self?.messagesCollectionView.scrollToLastItem()
                     }
                 }
             case .failure(let error):

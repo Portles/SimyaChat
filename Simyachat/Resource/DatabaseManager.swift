@@ -164,6 +164,8 @@ extension DatabaseManager {
                 break
             case .custom(_):
                 break
+            case .linkPreview(_):
+                break
             }
             
             let conversationId = "conversation_\(firstMessage.messageId)"
@@ -246,6 +248,8 @@ extension DatabaseManager {
         case .contact(_):
             break
         case .custom(_):
+            break
+        case .linkPreview(_):
             break
         }
         
@@ -416,6 +420,8 @@ extension DatabaseManager {
             case .contact(_):
                 break
             case .custom(_):
+                break
+            case .linkPreview(_):
                 break
             }
             

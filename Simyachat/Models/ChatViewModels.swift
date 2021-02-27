@@ -38,6 +38,8 @@ extension MessageKind {
             return "contact"
         case .custom(_):
             return "custom"
+        case .linkPreview(_):
+            return "link"
         }
     }
 }
